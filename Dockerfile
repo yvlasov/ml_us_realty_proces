@@ -7,7 +7,7 @@ COPY requirements.txt .
 
 RUN pip install -q --upgrade pip
 RUN pip install -q -r requirements.txt
-RUN pip install -q scikit-learn python-dev-tools cmake ast pandas numpy
+RUN pip install -q scikit-learn python-dev-tools cmake pandas numpy
 
 # Pass DATASET_PATH as an environment variable to the model_build.py script
 # Default: /app/share/example_dataset.xlsx
