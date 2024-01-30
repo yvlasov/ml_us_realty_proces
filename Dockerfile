@@ -27,7 +27,7 @@ RUN mkdir -p /app/var; \
     file /app/share/data.csv;
     
 # Run a script to build and save your CatBoost models
-RUN python3 model_build.py 
+RUN python3 model_build.py
 
 # Final container
 FROM python:3.11

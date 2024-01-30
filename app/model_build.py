@@ -475,7 +475,7 @@ model_filename = f'{model_save_folder}/model_v{VERSION}.cbm'
 print('Percentage Error or Mean Absolute Percentage Error (MAPE):', round(mape, 2))
 print(f"Saving {model_filename}...")
 catboost_model.save_model(model_filename)
-model_descr = f"us_relty_price_pred-v{VERSION} MAPE:{round(mape,2)}\n"
+model_descr = f"US relty price prediction v{VERSION} MAPE:{round(mape,2)}\n"
 
 with open(f'{model_save_folder}/DESCR', "w") as f:
     f.write(model_descr)
