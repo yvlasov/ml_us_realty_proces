@@ -20,11 +20,11 @@ ENV DATASET_SHEET_NAME=$DATASET_SHEET_NAME
 ADD app .
 
 RUN mkdir -p /app/var; \
-    mkdir -p /app/share; \
-    wget -cq https://yvlasov-share.s3.amazonaws.com/diploma_project_data.csv.zip; \
+    mkdir -p /app/share;
+RUN wget -cq https://yvlasov-share.s3.amazonaws.com/diploma_project_data.csv.zip; \
     unzip -q diploma_project_data.csv.zip; \
-    mv data.csv /app/share/data.csv; \
-    file /app/share/data.csv;
+    mv data.csv /app/share/data.csv;
+RUN file /app/share/data.csv;
     
 # Run a script to build and save your CatBoost models
 RUN python3 model_build.py

@@ -61,3 +61,63 @@ bestIteration = 6042
 # ВЫВОД:
 Результат хорошо интерпретируется и соответствует интуитивному пониманию и жизненному опыту. Так же имеющиеся в публичном доступе знания по аналогичным задачам подтверждают что информация о образовательных учреждениях сильно кореллирует с ценой недвижимости на рынке США.
 Модель KNN показала MAPE около 52% в то время как CatBost 27.19%
+
+# Эксплуатация
+
+## Сборка Docker
+
+### Запустите сборку и обучение:
+```
+docker build . \
+    --progress=plain \
+    -t us_realty_predict
+```
+После сборку у вас появится образ Docker ```us_realty_predict```, далее вы можете его запустить как API сервер.
+>ОШИБКА: При возникновении ошибки при сборке попробуйте перезапустить с параметром ```--no-cache```.
+
+### Запуск сервера и выполнение запросов
+
+#### Запуск сервера собранного выше Docker образа ```us_realty_predict```:
+```
+ docker run -it \
+    --name us_realty_predict \
+    --rm \
+    -p 8080:8080 \
+    -e FLASK_DEBUG=1 \
+    us_realty_predict
+```
+
+#### Пример запроса информации о моделях:
+```
+curl http://127.0.0.1:8080/model/info
+```
+Ответ:
+```
+US relty price prediction v0.99.0 MAPE:27.96
+```
+
+#### Пример запроса информации о фичах:
+```
+curl http://127.0.0.1:8080/model/features           
+```
+Ответ:
+```
+["baths", "fireplace", "sqft", "beds", "stories", "hf_year_built", "hf_lotsize", "hf_remodeled_year", "hf_parking", "priv_pool", "schl_rating_mean", "schl_distnce_mean", "schl_gr_p_top_rate_dist", "schl_gr_p_top_rate", "schl_gr_p_min_dist", "schl_gr_pk_top_rate_dist", "schl_gr_pk_top_rate", "schl_gr_pk_min_dist", "schl_gr_k_top_rate_dist", "schl_gr_k_top_rate", "schl_gr_k_min_dist", "schl_gr_1_top_rate_dist", "schl_gr_1_top_rate", "schl_gr_1_min_dist", "schl_gr_2_top_rate_dist", "schl_gr_2_top_rate", "schl_gr_2_min_dist", "schl_gr_3_top_rate_dist", "schl_gr_3_top_rate", "schl_gr_3_min_dist", "schl_gr_4_top_rate_dist", "schl_gr_4_top_rate", "schl_gr_4_min_dist", "schl_gr_5_top_rate_dist", "schl_gr_5_top_rate", "schl_gr_5_min_dist", "schl_gr_6_top_rate_dist", "schl_gr_6_top_rate", "schl_gr_6_min_dist", "schl_gr_7_top_rate_dist", "schl_gr_7_top_rate", "schl_gr_7_min_dist", "schl_gr_8_top_rate_dist", "schl_gr_8_top_rate", "schl_gr_8_min_dist", "schl_gr_9_top_rate_dist", "schl_gr_9_top_rate", "schl_gr_9_min_dist", "schl_gr_10_top_rate_dist", "schl_gr_10_top_rate", "schl_gr_10_min_dist", "schl_gr_11_top_rate_dist", "schl_gr_11_top_rate", "schl_gr_11_min_dist", "schl_gr_12_top_rate_dist", "schl_gr_12_top_rate", "schl_gr_12_min_dist", "state_AL", "state_AZ", "state_CA", "state_CO", "state_DC", "state_DE", "state_FL", "state_GA", "state_IA", "state_IL", "state_IN", "state_KY", "state_MA", "state_MD", "state_ME", "state_MI", "state_MO", "state_MS", "state_MT", "state_NC", "state_NJ", "state_NV", "state_NY", "state_OH", "state_OK", "state_OR", "state_PA", "state_SC", "state_TN", "state_TX", "state_UT", "state_VA", "state_VT", "state_WA", "state_WI", "type_condo", "type_coop", "type_high_rise", "type_land", "type_mobile_manufactured", "type_multi_family", "type_ranch", "type_single_family", "type_townhouse", "type_traditional", "status_active", "status_contingent", "status_for_sale", "status_foreclosed", "status_foreclosure", "status_nan", "status_new", "status_pending", "status_pre_foreclosure", "status_under_contract", "hf_cooling_central", "hf_cooling_cooling_system", "hf_cooling_electric", "hf_cooling_gas", "hf_cooling_has_cooling", "hf_cooling_heat_pump ", "hf_cooling_nan", "hf_cooling_no_data", "hf_cooling_other", "hf_cooling_wall", "hf_heating_air", "hf_heating_baseboard", "hf_heating_central", "hf_heating_electric", "hf_heating_gas", "hf_heating_heat_pump ", "hf_heating_nan", "hf_heating_no_data", "hf_heating_other", "hf_heating_wall"]
+```
+
+#### Пример запроса предсказания для модели:
+```
+curl -X POST http://127.0.0.1:8080/model/predict \
+-H "Content-Type: application/json" \
+-d '{
+   "model_version":"0.99.0",
+   "features":{
+      "bath":"1.0",
+       ...
+    }
+    }'
+```
+Ответ если вы не указали все фичи:
+```
+"Missing features: ['baths', 'fireplace', 'sqft', 'beds', 'stories', ...]'
+```

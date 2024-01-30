@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import ast
 import re
+import json
 from catboost import CatBoostRegressor
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import train_test_split
@@ -479,3 +480,6 @@ model_descr = f"US relty price prediction v{VERSION} MAPE:{round(mape,2)}\n"
 
 with open(f'{model_save_folder}/DESCR', "w") as f:
     f.write(model_descr)
+
+with open(f'{model_save_folder}/features.json', "w") as f:
+    f.write(json.dumps(list(X_train.columns)))
