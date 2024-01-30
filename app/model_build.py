@@ -5,6 +5,7 @@ import ast
 import re
 from catboost import CatBoostRegressor
 from sklearn.metrics import make_scorer
+from sklearn.model_selection import train_test_split
 
 train_dataset_csv='/app/share/data.csv'
 model_save_folder='/app/var'
